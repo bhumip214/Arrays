@@ -57,6 +57,7 @@ char *day_2_array_tests()
     mu_assert(arr->count == 2, "Remove count failed");
 
     mu_assert(strcmp(arr_read(arr, 0), "VALUE-2") == 0, "Remove value failed");
+    arr_print(arr);
     mu_assert(strcmp(arr_read(arr, 1), "VALUE-1") == 0, "Remove value failed");
     mu_assert(arr_read(arr, 2) == NULL, "Remove value failed");
 

@@ -43,7 +43,6 @@ void destroy_array(Array *arr)
   // Free all elements
   for (int i = 0; i < arr->count; i++)
   {
-    arr->elements[i] = NULL;
     free(arr->elements[i]);
   }
 
@@ -122,15 +121,14 @@ void arr_insert(Array *arr, char *element, int index)
   }
 
   // Move every element after the insert index to the right one position
-  for (int i = index; i < arr->count; i++)
+  for (int i = arr->count; i > index; i--)
   {
-    arr->elements[i + 1] = arr->elements[i];
+    arr->elements[i] = arr->elements[i - 1];
   }
 
   // Copy the element (hint: use `strdup()`) and add it to the array
-  // char *element_copy = strdup(element);
-  // arr->elements[index] = element_copy;
-  arr->elements[index] = element;
+  char *element_copy = strdup(element);
+  arr->elements[index] = element_copy;
 
   // Increment count by 1
   arr->count++;
@@ -167,14 +165,13 @@ void arr_remove(Array *arr, char *element)
   // Search for the first occurence of the element and remove it.
   for (int i = 0; i < arr->count; i++)
   {
-    if (arr->elements[i] == element)
+    if (strcmp(arr->elements[i], element) == 0)
     {
-      arr->elements[i] = NULL;
       // Don't forget to free its memory!
       free(arr->elements[i]);
 
       // Shift over every element after the removed element to the left one position
-      for (int j = i; j < arr->count; j++)
+      for (int j = i; j < arr->count - 1; j++)
       {
         arr->elements[j] = arr->elements[j + 1];
       }
