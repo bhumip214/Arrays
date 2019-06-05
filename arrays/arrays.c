@@ -63,7 +63,7 @@ void resize_array(Array *arr)
   char **new_elements = malloc(new_capacity * sizeof(char *));
 
   // Copy elements into the new storage
-  for (int i = 0; i < arr->capacity; i++)
+  for (int i = 0; i < arr->count; i++)
   {
     new_elements[i] = arr->elements[i];
   }
@@ -110,7 +110,7 @@ void arr_insert(Array *arr, char *element, int index)
   // Throw an error if the index is greater than the current count
   if (index > arr->count)
   {
-    fprintf(stderr, "IndexError: Index is out of range\n");
+    fprintf(stderr, "IndexError: Index %d out of range.\n", index);
     return;
   }
 
@@ -160,25 +160,56 @@ void arr_append(Array *arr, char *element)
  *
  * Throw an error if the value is not found.
  *****/
+// Solution 1
+// void arr_remove(Array *arr, char *element)
+// {
+//   // Search for the first occurence of the element and remove it.
+//   for (int i = 0; i < arr->count; i++)
+//   {
+//     if (strcmp(arr->elements[i], element) == 0)
+//     {
+//       // Don't forget to free its memory!
+//       free(arr->elements[i]);
+
+//       // Shift over every element after the removed element to the left one position
+//       for (int j = i; j < arr->count - 1; j++)
+//       {
+//         arr->elements[j] = arr->elements[j + 1];
+//       }
+//     }
+//   }
+//   // Decrement count by 1
+//   arr->count--;
+// }
+
+// Solution 2 done in class
 void arr_remove(Array *arr, char *element)
 {
+  int removed = 0;
   // Search for the first occurence of the element and remove it.
   for (int i = 0; i < arr->count; i++)
   {
-    if (strcmp(arr->elements[i], element) == 0)
+    if (removed)
+    {
+      // Shift over every element after the removed element to the left one position
+      arr->elements[i - 1] = arr->elements[i];
+    }
+    else if (strcmp(arr->elements[i], element) == 0)
     {
       // Don't forget to free its memory!
       free(arr->elements[i]);
-
-      // Shift over every element after the removed element to the left one position
-      for (int j = i; j < arr->count - 1; j++)
-      {
-        arr->elements[j] = arr->elements[j + 1];
-      }
+      removed = 1;
     }
   }
   // Decrement count by 1
-  arr->count--;
+  if (removed)
+  {
+    arr->count--;
+  }
+  else
+  {
+    fprintf(stderr, "ValueError: %s is not in array.\n", element);
+  }
 }
 
 /*****
